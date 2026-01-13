@@ -34,7 +34,15 @@ jobs:
           python scripts/validate_jsonl.py cards/regimen_5cards.jsonl
           python scripts/validate_jsonl.py cards/sacrobosco_5cards.jsonl
 
-      - name: "Generate and score (A: normal vs neutral)"
+      - name: Generate and score (A: normal vs neutral)
         run: |
           python scripts/demo_it_moves.py --ivtff data/LSI_ivtff_0d.txt --ref_txt runs/voynich_ref.txt --stream A --seed_mode normal
           python scripts/demo_it_moves.py --ivtff data/LSI_ivtff_0d.txt --ref_txt runs/voynich_ref.txt --stream A --seed_mode neutral
+
+      - name: Upload generated outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: voynich-mini-outputs
+          path: |
+            runs/*.txt
+            runs/*.json
