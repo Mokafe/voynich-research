@@ -46,3 +46,4 @@ jobs:
           path: |
             runs/*.txt
             runs/*.json
+
