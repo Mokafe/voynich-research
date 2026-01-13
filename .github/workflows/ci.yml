@@ -7,25 +7,33 @@ on:
 jobs:
   score:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
       - name: Install deps
         run: |
           python -V
           pip install -r requirements.txt || true
+
       - name: Download IVTFF reference
         run: |
           mkdir -p data runs
           curl -L -o data/LSI_ivtff_0d.txt https://www.voynich.nu/data/beta/LSI_ivtff_0d.txt
           python scripts/extract_voynich_ref.py --ivtff data/LSI_ivtff_0d.txt --out runs/voynich_ref.txt --max_lines 20000
+
       - name: Validate cards
         run: |
           python scripts/validate_jsonl.py cards/macer_5cards.jsonl
           python scripts/validate_jsonl.py cards/regimen_5cards.jsonl
           python scripts/validate_jsonl.py cards/sacrobosco_5cards.jsonl
+
       - name: Generate and score (A: normal vs neutral)
         run: |
           python scripts/demo_it_moves.py --ivtff data/LSI_ivtff_0d.txt --ref_txt runs/voynich_ref.txt --stream A --seed_mode normal
